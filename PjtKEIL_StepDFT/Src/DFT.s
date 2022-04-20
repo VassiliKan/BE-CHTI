@@ -6,8 +6,9 @@
 	import LeSignal
 	
 	EXPORT calculReel
+	EXPORT calculIm
 
-; ====================== zone de réservation de données,  ======================================
+; ====================== zone de rÃ©servation de donnÃ©es,  ======================================
 ;Section RAM (read only) :
 	area    mesdata,data,readonly
 
@@ -22,7 +23,7 @@
 		
 ;Section ROM code (read only) :		
 	area    moncode,code,readonly
-; écrire le code ici		
+; Ã©crire le code ici		
 
 
 ; int M = 64;
@@ -37,7 +38,7 @@
 M EQU 64
 	
 
-; r0 signal et r1 = k utilisé par la fonction DFT_ModuleAuCarre()
+; r0 signal et r1 = k utilisÃ© par la fonction DFT_ModuleAuCarre()
 ; SOS
 	
 
@@ -45,31 +46,73 @@ calculReel
 	push{r4, r5, r6, r7, r12}
 	
 	mov r3, #0 					; load index 
-	mov r4, #0
+	mov r4, #0					; sum
 	mov r6, #M
 	ldr r12, =TabCos				;r12 = TabCos[p];
 	
 
-loop
-	; Format : 1.15
-	ldrsh r0, [r0, r3, lsl #1]  ; LeSignal[i];
+loopR
+	; Format : 4.12
+	ldrsh r5, [r0, r3, lsl #1]  ; LeSignal[i];
 	
 	mul r2, r1, r3				; r2 = index*k;
-	and r2, r2, #0x40
+	and r2, r2, #0x3f
 	
 	; Format 1.15
 	ldrsh r7 , [r12, r2, lsl #1] ; TabCos[i*k % M]
 	
-	; Format : 2.30
-	mul r7, r0, r7				; res = LeSignal[i] * TabCos[i*k % M]
+	; Format : 5.27
+	mul r7, r5, r7				; res = LeSignal[i] * TabCos[i*k % M]
 	
-	; Format : 2.30
+	; Format 5.21
+	asr r7, r7, #6 
+	
+	; Format : 11.21
 	add r4, r4, r7				; sum+= res				
 	
 	add r3, #1					; index++
 	cmp r3, #M					; si index < M
-	blt loop					; loop
+	blt loopR					; loop
+	smull r1, r0, r4, r4 		; Format 22.42
+	asr r0, r0, #10
+	b exit
+
+
+calculIm
+	push{r4, r5, r6, r7, r12}
 	
+	mov r3, #0 					; load index 
+	mov r4, #0					; sum
+	mov r6, #M
+	ldr r12, =TabSin				;r12 = TabCos[p];
+	
+
+loopIm
+	; Format : 4.12
+	ldrsh r5, [r0, r3, lsl #1]  ; LeSignal[i];
+	
+	mul r2, r1, r3				; r2 = index*k;
+	and r2, r2, #0x3f
+	
+	; Format 1.15
+	ldrsh r7 , [r12, r2, lsl #1] ; TabCos[i*k % M]
+	
+	; Format : 5.27
+	mul r7, r5, r7				; res = LeSignal[i] * TabCos[i*k % M]
+	
+	; Format 5.21
+	asr r7, r7, #6 
+	
+	; Format : 11.21
+	add r4, r4, r7				; sum+= res				
+	
+	add r3, #1					; index++
+	cmp r3, #M					; si index < M
+	blt loopIm					; loop
+	smull r1, r0, r4, r4 		; Format 22.42
+	asr r0, r0, #10
+	b exit
+
 
 exit
 	pop{r4, r5, r6, r7, r12}
