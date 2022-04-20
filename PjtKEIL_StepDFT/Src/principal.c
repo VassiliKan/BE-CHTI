@@ -1,6 +1,7 @@
 #include "DriverJeuLaser.h"
+#include <stdio.h>
 
-extern int calculReel(short*, int);
+extern int calculDFT(short*, int);
 extern short LeSignal;
 
 int tab[64];
@@ -16,7 +17,7 @@ int main(void)
 CLOCK_Configure();
 	
 for(int i = 0; i < 64; i++){
-	tab[i] = calculReel(&LeSignal, i);
+	tab[i] = calculDFT(&LeSignal, i);
 }
 
 	
