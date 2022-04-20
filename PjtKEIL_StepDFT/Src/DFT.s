@@ -5,8 +5,7 @@
 	
 	import LeSignal
 	
-	EXPORT calculReel
-	EXPORT calculIm
+	EXPORT calculDFT
 
 ; ====================== zone de réservation de données,  ======================================
 ;Section RAM (read only) :
@@ -43,13 +42,12 @@ M EQU 64
 	
 
 calculReel
-	push{r4, r5, r6, r7, r12}
+	push{r4, r5, r6, r7, r8, r12}
 	
 	mov r3, #0 					; load index 
 	mov r4, #0					; sum
 	mov r6, #M
-	ldr r12, =TabCos				;r12 = TabCos[p];
-	
+	ldr r12, =TabCos				;r12 = TabCos[p];	
 
 loopR
 	; Format : 4.12
@@ -73,14 +71,12 @@ loopR
 	add r3, #1					; index++
 	cmp r3, #M					; si index < M
 	blt loopR					; loop
-	smull r1, r0, r4, r4 		; Format 22.42
-	asr r0, r0, #10
-	b exit
-
+	smull r7, r8, r4, r4 		; Format 22.42
+	asr r8, r8, #10
+	
+	
 
 calculIm
-	push{r4, r5, r6, r7, r12}
-	
 	mov r3, #0 					; load index 
 	mov r4, #0					; sum
 	mov r6, #M
@@ -111,24 +107,16 @@ loopIm
 	blt loopIm					; loop
 	smull r1, r0, r4, r4 		; Format 22.42
 	asr r0, r0, #10
+	add r0, r0, r8
 	b exit
 
+
+calculDFT
+	b calculReel
 
 exit
 	pop{r4, r5, r6, r7, r12}
 	bx lr
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
