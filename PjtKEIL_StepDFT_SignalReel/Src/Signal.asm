@@ -1,4 +1,3 @@
-LE BON
 
 	AREA Signal, DATA, READONLY
 	export LeSignal
