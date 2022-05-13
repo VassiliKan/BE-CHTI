@@ -3,4 +3,4 @@
 Estelle CHARPENTIER
 Sacha CAULI
 
-Contents d'avoir participer à ce BE
+Contents d'avoir participé à ce BE :))
