@@ -5,9 +5,13 @@
 	
 	import LeSignal
 	
+<<<<<<< HEAD
 	EXPORT DFT_ModuleAuCarre
+=======
+	EXPORT calculDFT
+>>>>>>> 67b55f153cd317610b7fa2aa7d7c5808ce1498a9
 
-; ====================== zone de réservation de données,  ======================================
+; ====================== zone de rÃ©servation de donnÃ©es,  ======================================
 ;Section RAM (read only) :
 	area    mesdata,data,readonly
 
@@ -22,7 +26,7 @@
 		
 ;Section ROM code (read only) :		
 	area    moncode,code,readonly
-; écrire le code ici		
+; Ã©crire le code ici		
 
 
 ; int M = 64;
@@ -37,7 +41,7 @@
 M EQU 64
 	
 
-; r0 signal et r1 = k utilisé par la fonction DFT_ModuleAuCarre()
+; r0 signal et r1 = k utilisÃ© par la fonction DFT_ModuleAuCarre()
 ; SOS
 	
 
@@ -111,7 +115,11 @@ loopIm
 	b exit
 
 
+<<<<<<< HEAD
 DFT_ModuleAuCarre
+=======
+calculDFT
+>>>>>>> 67b55f153cd317610b7fa2aa7d7c5808ce1498a9
 	b calculReel
 
 exit
