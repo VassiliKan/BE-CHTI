@@ -5,11 +5,7 @@
 	
 	import LeSignal
 	
-<<<<<<< HEAD
 	EXPORT DFT_ModuleAuCarre
-=======
-	EXPORT calculDFT
->>>>>>> 67b55f153cd317610b7fa2aa7d7c5808ce1498a9
 
 ; ====================== zone de réservation de données,  ======================================
 ;Section RAM (read only) :
@@ -115,11 +111,8 @@ loopIm
 	b exit
 
 
-<<<<<<< HEAD
+
 DFT_ModuleAuCarre
-=======
-calculDFT
->>>>>>> 67b55f153cd317610b7fa2aa7d7c5808ce1498a9
 	b calculReel
 
 exit
